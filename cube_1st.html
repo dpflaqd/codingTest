@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>큐브 1단계</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        #wrap {
+            width: 500px;
+            margin: auto;
+            padding: 5em 1em 1em;
+        }
+
+        #wrap input {
+            display: inline-block;
+            width: 100px;
+            margin-bottom: 10px;
+            padding: 10px 5px;
+            font-size: 100%;
+            font-weight: 600;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        #wrap>ul:first-of-type {
+            max-width: 200px;
+            margin: auto;
+        }
+
+        #wrap input[type=text]+button {
+            height: 42px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        #result {
+            font-size: 3em;
+            font-weight:600;
+            letter-spacing: -.05em;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <input type="text" id="text" value="apple">
+        <input type="text" id="num" value="3">
+        <input type="text" id="dir" value="L">
+        <button type="button" onclick="moveText();">실행</button>
+        <span id="result"></span>
+    </div>
+    <script>
+        function textValue() {
+            console.log(text);
+            var text = document.getElementById("text").value.split('');
+            return text;
+        }
+
+        function moveText() {
+            var text = textValue();
+            var num = document.getElementById("num").value;
+            var dir = document.getElementById("dir").value;
+
+            function moveLeft() {
+                for (var i = 1; i <= num; i++) {
+                    var lastText = text.shift();
+                    text.push(lastText);
+                    document.getElementById("result").innerHTML = text;
+                    console.log("lastText =" + lastText);
+                    console.log("text = " + text);
+                }
+            }
+
+            function moveRight() {
+                for (var i = 1; i <= num; i++) {
+                    var lastText = text.pop();
+                    text.unshift(lastText);
+                    document.getElementById("result").innerHTML = text;
+                    console.log("lastText =" + lastText);
+                    console.log("text = " + text);
+                }
+            }
+
+            if (dir === "L") {
+                if (num >= 0) {
+                    moveLeft();
+                } else {
+                    num = Math.abs(num);
+                    moveRight();
+                }
+            } else {
+                if (num >= 0) {
+                    moveRight();
+                } else {
+                    num = Math.abs(num);
+                    moveLeft();
+                }
+            }
+        }  
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>큐브 2단계</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        button:focus,
+        button:hover {
+            cursor: pointer;
+        }
+
+        #wrap {
+            max-width: 360px;
+            margin: auto;
+            padding: 5em 1em 1em;
+        }
+
+        #wrap>ul:first-of-type {
+            max-width: 200px;
+            margin: auto;
+        }
+
+        .inputWrap {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        #wrap label {
+            width: 100%;
+            padding: 5px 0;
+            flex: 100% 0 0;
+            font-size: 14px;
+            letter-spacing: -.05em;
+        }
+
+        #wrap input[type=text] {
+            width: calc(100% - 70px);
+            margin-bottom: 10px;
+            padding: 10px 5px;
+            font-size: 100%;
+            font-weight: 600;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        #wrap input[type=text]+button {
+            height: 42px;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        #cubeChange {
+            display: flex;
+            flex-direction: column;
+            font-size: 3em;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .btnCubeWrap button {
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap">
+        <ul>
+            <li class="inputWrap">
+                <label for="">큐브 첫번째 줄</label>
+                <input type="text" maxlength="3" value="RRW"><button type="button">입력</button>
+            </li>
+            <li class="inputWrap">
+                <label for="">큐브 두번째 줄</label>
+                <input type="text" maxlength="3" value="GCW"><button type="button">입력</button>
+            </li>
+            <li class="inputWrap">
+                <label for="">큐브 세번째 줄</label>
+                <input type="text" maxlength="3" value="GBB"><button type="button">입력</button>
+            </li>
+        </ul>
+        <div class="btnCubeWrap">
+            <button type="button">U</button>
+            <button type="button">U'</button>
+            <button type="button">R</button>
+            <button type="button">R'</button>
+            <button type="button">L</button>
+            <button type="button">L'</button>
+            <button type="button">B</button>
+            <button type="button">B'</button>
+            <button type="button">Q</button>
+        </div>
+        <p id="cubeChange"></p>
+    </div>
+</body>
+<script>
+    $(function () {
+        var Cube = {
+            array: [[], [], []],
+            $inputBox: $('.inputWrap input[type=text]'),
+            init: function () {
+                this.set();
+                this.inputText();
+                this.hoverBtn();
+            },
+            set: function () {
+                // array 초기화
+                for (var i = 0; i < this.array.length; i++) {
+                    for (var j = 0; j < this.array.length; j++) {
+                        this.array[i, j] = '';
+                        // console.log(`i: ${i} j: ${j}`);
+                    }
+                }
+                // 동적 배열 초기화
+                for (var i = 0; i < this.array.length; i++) {
+                    this['array' + i] = '';
+                }
+            },
+            inputText: function () {
+                var cube = this;
+                var $btnInput = $(this.$inputBox).next('button');
+                $btnInput.on('click', function () {
+                    var idx = $(this).parent().index();
+                    cube.array[idx] = $(this).prev().val().split('');
+                    cube['array' + idx] = $(this).prev().val().split(''); // 동적 배열
+                    cube.print();
+                });
+            },
+            hoverBtn: function () {
+                var cube = this;
+                $('.btnCubeWrap button').on({
+                    'mouseover': function () {
+                        // console.log($(this).text());
+                    },
+                    'click': function () {
+                        var option = $(this).text();
+                        cube.rotateCube(option);
+                    }
+                });
+            },
+            rotateCube: function (position) {
+                // var newArr = [];
+                // var changeArr = [];
+                // var i = 0;
+                // var j = 0;
+
+                // function setFor(pos) {
+                //   if (pos.indexOf('R') !== -1) {
+                //     j = 2;
+                //   } else if (pos.indexOf('B') !== -1) {
+                //     i = 2;
+                //   } else {
+                //     i = 0;
+                //     j = 0;
+                //   }
+                //   // console.log(`i: ${i} j: ${j}`);
+                // }
+                // setFor(position);
+
+                // if (position.indexOf(posU) !== -1 || position.indexOf(posB) !== -1) { //열이 움직이는 U, B
+                //   newArr = [];
+                //   for (var j; j<this.array.length; j++) {
+                //     newArr.push(this.array[i][j]);
+                //   }
+                // } else if (position.indexOf(posR) !== -1 || position.indexOf(posL) !== -1) { //행이 움직이는 R, L
+                //   newArr = [];
+                //   for (var i; i<this.array.length; i++) {
+                //     newArr.push(this.array[i][j]);
+                //   }
+                // }
+
+                // setFor(position);       
+
+                // if (position.indexOf(bar) !== -1) { //버튼에 bar가 있는 경우
+                //   console.log(newArr);
+                //   changeArr = [];
+                //   changeArr = this.reverse(newArr);
+                //   for(var i; i<this.array.length; i++) {
+                //     this.array[i][j] = changeArr[i];
+                //   }
+                // } else {
+                //   console.log(newArr);
+                //   changeArr = [];
+                //   for(var i; i<this.array.length; i++) {
+                //     this.array[i][j] = changeArr[i];
+                //   }
+                // }
+                // this.print();
+
+
+                if (position.indexOf('R') !== -1) { // 버튼에 R이 있는 경우
+                    var newArr = [];
+                    var changeArr = [];
+
+                    for (var i = 0; i < this.array.length; i++) {
+                        newArr.push(this.array[i][2]);
+                    }
+
+                    if (position.indexOf("'") !== -1) { // '가 있는 경우, 오른쪽
+                        changeArr = this.reverse(newArr);
+                    } else {
+                        changeArr = this.forward(newArr);
+                    }
+                    for (var i = 0; i < this.array.length; i++) {
+                        this.array[i][2] = changeArr[i];
+                    }
+                } else if (position.indexOf("B") !== -1) { // 버튼에 B가 있는 경우
+                    var newArr = [];
+                    var changeArr = [];
+
+                    for (var i = 0; i < this.array.length; i++) {
+                        newArr.push(this.array[2][i]);
+                    }
+
+                    if (position.indexOf("'") !== -1) { // '가 있는 경우, 오른쪽
+                        changeArr = this.reverse(newArr);
+                    } else {
+                        changeArr = this.forward(newArr);
+                    }
+                    for (var i = 0; i < this.array.length; i++) {
+                        this.array[2][i] = changeArr[i];
+                    }
+                } else if (position.indexOf("U") !== -1) { // 버튼에 U가 있는 경우
+                    var newArr = [];
+                    var changeArr = [];
+
+                    for (var j = 0; j < this.array.length; j++) {
+                        newArr.push(this.array[0][j]);
+                    }
+
+                    if (position.indexOf("'") !== -1) { // '가 있는 경우, 오른쪽
+                        changeArr = this.reverse(newArr);
+                    } else {
+                        changeArr = this.forward(newArr);
+                    }
+                    for (var j = 0; j < this.array.length; j++) {
+                        this.array[0][j] = changeArr[j];
+                    }
+                } else if (position.indexOf('L') !== -1) { // 버튼에 L이 있는 경우
+                    var newArr = [];
+                    var changeArr = [];
+
+                    for (var i = 0; i < this.array.length; i++) {
+                        newArr.push(this.array[i][0]);
+                    }
+
+                    if (position.indexOf("'") !== -1) { // '가 있는 경우, 오른쪽
+                        changeArr = this.reverse(newArr);
+                    } else {
+                        changeArr = this.forward(newArr);
+                    }
+                    for (var i = 0; i < this.array.length; i++) {
+                        this.array[i][0] = changeArr[i];
+                    }
+                }
+                this.print();
+                if (position.indexOf('Q') !== -1) { //버튼에 R이 있는 경우
+                    $('#cubeChange').text('Bye~ 👋🏻')
+                }
+            },
+            forward: function (arr) {
+                var tmp = '';
+                tmp = arr.shift();
+                arr.push(tmp);
+                return arr;
+            },
+            reverse: function (arr) {
+                var tmp = '';
+                tmp = arr.pop();
+                arr.unshift(tmp);
+                return arr;
+            },
+            print: function () {
+                var txt = '';
+                // array[]에 추가
+                for (var i = 0; i < this.array.length; i++) {
+                    txt += '<span>' + this.array[i] + '</span>';
+                }
+
+                // 동적 배열에 추가
+                // for(var i=0;i<this.array.length;i++) {
+                //   txt += '<span>' + this['array'+i] + '</span>';
+                // }
+                $('#cubeChange').html(txt);
+            }
+        }
+        Cube.init();
+    });
+</script>
+
+</html>
