@@ -19,7 +19,7 @@
             display: inline-block;
             width: 100px;
             margin-bottom: 10px;
-            padding: 10px 5px;
+            padding: 10px 5px;d
             font-size: 100%;
             font-weight: 600;
             text-align: center;
@@ -101,6 +101,36 @@
                 }
             }
         }  
+
+
+        // $(document).on('click', 'button', function(e) {
+        //     var result = document.getElementById("result").innerHTML;
+        //     var expected = "l,e,a,p,p";
+        //     console.log(result);
+        //     console.log(expected);
+
+        //     if(result === expected){
+        //         console.log('성공!');
+        //     } else {
+        //         throw new Error(result + ' is not equal to ' + expected);
+        //     }
+        // }); 
+
+        describe('resultText', ()  => {
+            it ('renders result', () => {
+
+                const result = [
+                    {id = 1, title='l,e,a,p,p'}
+                ]
+                const { wrap } => render({
+                    <resultText
+                        result={result}
+                    />
+                });
+
+                expect(result).toHaveTextContent('l,e,a,p,p');
+            });
+        });
     </script>
 </body>
 
